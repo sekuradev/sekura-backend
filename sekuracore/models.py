@@ -13,18 +13,26 @@ def random_string_100():
 
 
 class Agent(models.Model):
+    DISABLED = "D"
+    APPROVED = "A"
+    REJECTED = "R"
+    STATUS_CHOICES = [
+        (DISABLED, "Disabled"),
+        (APPROVED, "Approved"),
+        (REJECTED, "Rejected"),
+    ]
+
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=50, unique=True)
-    approved = models.BooleanField(default=False)
+    status = models.CharField(max_length=1, default=DISABLED, choices=STATUS_CHOICES)
     source_of_truth = models.BooleanField(default=False)
-    preshared_secret = models.CharField(max_length=100, default=random_string_100, blank=True, null=True)
     secret = models.BinaryField(blank=True, null=True)
     parameters = models.CharField(max_length=200, blank=True, null=True, help_text="Comma-separated fields")
 
     class Meta:
         indexes = [
-            models.Index(fields=["name", "secret", "preshared_secret"]),
+            models.Index(fields=["name", "secret"]),
         ]
 
     def __str__(self):
@@ -32,12 +40,22 @@ class Agent(models.Model):
 
 
 class Employee(models.Model):
+    ONBOARDING = "O"
+    ACTIVE = "A"
+    OFFBOARDING = "D"
+    OFFBOARDED = "R"
+    STATUS_CHOICES = [
+        (ONBOARDING, "Onboarding"),
+        (ACTIVE, "Active"),
+        (OFFBOARDING, "Offboarding"),
+        (OFFBOARDED, "Offboarded"),
+    ]
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
     email = models.CharField(max_length=200)
-    offboarding = models.BooleanField(default=False)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
 
     class Meta:
         indexes = [
@@ -49,10 +67,19 @@ class Employee(models.Model):
 
 
 class Access(models.Model):
+    ACTIVE = "A"
+    DISABLED = "D"
+    REVOKED = "R"
+    STATUS_CHOICES = [
+        (DISABLED, "Disabled"),
+        (ACTIVE, "Active"),
+        (REVOKED, "Revoked"),
+    ]
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     agent = models.ForeignKey("Agent", on_delete=models.CASCADE, related_name="access")
     employee = models.ForeignKey("Employee", on_delete=models.CASCADE, related_name="access")
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
     data = models.TextField()
 
     class Meta:
