@@ -3,12 +3,8 @@ name: Django CI
 on:
   push:
     branches: ["main"]
-    paths-ignore:
-      - "sekura-gui/**"
   pull_request:
     branches: ["main"]
-    paths-ignore:
-      - "sekura-gui/**"
 
 jobs:
   build:

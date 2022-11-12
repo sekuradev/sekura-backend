@@ -6,6 +6,5 @@
 version: 2
 updates:
   - package-ecosystem: "pip" # See documentation for possible values
-    directory: "/sekura" # Location of package manifests
     schedule:
       interval: "weekly"
