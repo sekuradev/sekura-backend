@@ -55,7 +55,7 @@ class Employee(models.Model):
     name = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
     email = models.CharField(max_length=200)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=ONBOARDING)
 
     class Meta:
         indexes = [
@@ -79,7 +79,7 @@ class Access(models.Model):
     updated = models.DateTimeField(auto_now=True)
     agent = models.ForeignKey("Agent", on_delete=models.CASCADE, related_name="access")
     employee = models.ForeignKey("Employee", on_delete=models.CASCADE, related_name="access")
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=DISABLED)
     data = models.TextField()
 
     class Meta:

@@ -18,6 +18,13 @@ class Agent(serializers.ModelSerializer):
         depth = 0
 
 
+class AgentRegister(serializers.ModelSerializer):
+    preshared_secret = serializers.CharField(max_length=500)
+
+    class Meta:
+        model = models.Agent
+
+
 class Employee(serializers.ModelSerializer):
     class Meta:
         model = models.Employee
