@@ -1,7 +1,0 @@
-pytest
-pytest-django
-pytest-xdist
-pytest-cov
-factory-boy
-faker
-requests
