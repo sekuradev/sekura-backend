@@ -18,9 +18,7 @@ type serverAgent struct {
 }
 
 func NewAgentServer(options []grpc.ServerOption) Server {
-	result := &serverAgent{}
-	result.options = options
-	return result
+	return &serverAgent{options: options}
 }
 
 func (s *serverAgent) Serve() {
@@ -38,6 +36,8 @@ func (s *serverAgent) Serve() {
 }
 
 func (s serverAgent) SetAccess(ctx context.Context, in *pb.SetAccessRequest) (*pb.SetAccessResponse, error) {
-	fmt.Println("hello world")
+	fmt.Println("++")
+	fmt.Printf("Items: %d\n", len(in.Accesses))
+	fmt.Println("--")
 	return &pb.SetAccessResponse{Error: false}, nil
 }
