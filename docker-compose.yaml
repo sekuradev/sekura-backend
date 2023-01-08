@@ -1,0 +1,28 @@
+version: "3.3"
+services:
+  agent: &agent
+    image: cosmtrek/air
+    command:
+      - -c
+      - air/agent.conf
+    working_dir: /go/src
+    volumes:
+      - .:/go/src
+    ports:
+      - 50052:50051
+  ui:
+    <<: *agent
+    command:
+      - -c
+      - air/ui.conf
+    ports:
+      - 50053:50051
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx:/etc/nginx/conf
+    depends_on:
+      - agent
+      - ui
+    ports:
+      - 50051:80
