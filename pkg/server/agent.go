@@ -14,21 +14,24 @@ import (
 
 type serverAgent struct {
 	pb.UnimplementedAgentServiceServer
+	options []grpc.ServerOption
 }
 
-func NewAgentServer() Server {
-	return &serverAgent{}
+func NewAgentServer(options []grpc.ServerOption) Server {
+	result := &serverAgent{}
+	result.options = options
+	return result
 }
 
 func (s *serverAgent) Serve() {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", *serverName, *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	gs := grpc.NewServer()
+	gs := grpc.NewServer(s.options...)
 	pb.RegisterAgentServiceServer(gs, s)
 	reflection.Register(gs)
-	log.Printf("server listening at %v", lis.Addr())
+	log.Printf("server listening at %v (%s:%d))", lis.Addr(), *serverName, *port)
 	if err := gs.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
